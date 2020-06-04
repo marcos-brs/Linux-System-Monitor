@@ -111,11 +111,10 @@ long LinuxParser::Jiffies() {
 
   std::ifstream filestream(kProcDirectory + kStatFilename);
   if (filestream.is_open()) {
-    while (std::getline(filestream, line)) {
-      std::istringstream linestream(line);
-      linestream >> cpu >> user >> nice >> system >> idle >> iowait >> irq >>
-          softirq >> steal >> guest >> guest_nice;
-    }
+    std::getline(filestream, line);
+    std::istringstream linestream(line);
+    linestream >> cpu >> user >> nice >> system >> idle >> iowait >> irq >>
+        softirq >> steal >> guest >> guest_nice;
   }
 
   return user + nice + system + idle + iowait + irq + softirq + steal + guest +
