@@ -269,7 +269,18 @@ string LinuxParser::Uid(int pid) {
 
 // TODO: Read and return the user associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::User(int pid [[maybe_unused]]) { return string(); }
+string LinuxParser::User(int pid) {
+  string line;
+  string search_token = "x:" + to_string(pid);
+  std::ifstream filestream(kPasswordPath);
+  if (filestream.is_open()) {
+    while (std::getline(filestream, line)) {
+      auto pos = line.find(search_token);
+      if (pos != string::npos) return line.substr(0, pos - 1);
+    }
+  }
+  return "root";
+}
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
