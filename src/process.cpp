@@ -39,6 +39,8 @@ float Process::CpuUtilization() {
   delta_jiffies = jiffies_end - jiffies_start;
   delta_time = uptime_end - uptime_start;
 
+  if (delta_time <= 0) return 0;
+
   return delta_jiffies / delta_time;
 }
 
