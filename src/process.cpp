@@ -13,11 +13,7 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-Process::Process(int pid) {
-  pid_ = pid;
-  user_ = LinuxParser::User(pid_);
-  command_ = LinuxParser::Command(pid_);
-};
+Process::Process(int pid) { pid_ = pid; };
 
 // TODO: Return this process's ID
 int Process::Pid() { return pid_; }
@@ -39,19 +35,17 @@ float Process::CpuUtilization() {
   delta_jiffies = jiffies_end - jiffies_start;
   delta_time = uptime_end - uptime_start;
 
-  if (delta_time <= 0) return 0;
-
   return delta_jiffies / delta_time;
 }
 
 // TODO: Return the command that generated this process
-string Process::Command() { return command_; }
+string Process::Command() { return LinuxParser::Command(pid_); }
 
 // TODO: Return this process's memory utilization
 string Process::Ram() { return LinuxParser::Ram(pid_); }
 
 // TODO: Return the user (name) that generated this process
-string Process::User() { return user_; }
+string Process::User() { return LinuxParser::User(pid_); }
 
 // TODO: Return the age of this process (in seconds)
 long int Process::UpTime() { return LinuxParser::UpTime(pid_); }
@@ -62,5 +56,5 @@ bool Process::operator<(Process const& a [[maybe_unused]]) const {
   long ram = std::stol(LinuxParser::Ram(pid_));
   long ram_a = std::stol(LinuxParser::Ram(a.pid_));
 
-  return ram > ram_a;
+  return ram < ram_a;
 }
