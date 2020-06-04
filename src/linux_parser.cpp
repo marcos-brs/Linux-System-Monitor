@@ -129,12 +129,11 @@ long LinuxParser::ActiveJiffies(int pid) {
   std::ifstream filestream(kProcDirectory + std::to_string(pid) +
                            kStatFilename);
   if (filestream.is_open()) {
-    while (std::getline(filestream, line)) {
-      std::istringstream linestream(line);
-      for (int i = 0; i < 13; i++) linestream >> trash;
+    std::getline(filestream, line);
+    std::istringstream linestream(line);
+    for (int i = 0; i < 13; i++) linestream >> trash;
 
-      linestream >> utime >> stime >> cutime >> cstime;
-    }
+    linestream >> utime >> stime >> cutime >> cstime;
   }
   return utime + stime + cutime + cstime;
 }
