@@ -12,7 +12,7 @@ float Processor::Utilization() {
   long active_duration = active_jiffies - last_active_jiffies_;
   long idle_duration = idle_jiffies - last_idle_jiffies_;
 
-  long utilization =
+  float utilization =
       static_cast<float>(active_duration) / (active_duration + idle_duration);
 
   last_active_jiffies_ = active_duration;
