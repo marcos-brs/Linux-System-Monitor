@@ -20,22 +20,18 @@ int Process::Pid() { return pid_; }
 
 // TODO: Return this process's CPU utilization
 float Process::CpuUtilization() {
-  long jiffies_start, jiffies_end;
-  long uptime_start, uptime_end;
-  float delta_jiffies, delta_time;
+  long active_jiffies = LinuxParser::ActiveJiffies(pid_);
+  long system_jiffies = LinuxParser::ActiveJiffies();
 
-  jiffies_start = LinuxParser::ActiveJiffies(pid_);
-  uptime_start = LinuxParser::UpTime(pid_);
+  long active_duration = active_jiffies - last_active_jiffies_;
+  long duration = system_jiffies - last_system_jiffies_;
 
-  usleep(100000);
+  long utilization = static_cast<float>(active_duration) / duration;
 
-  jiffies_end = LinuxParser::ActiveJiffies(pid_);
-  uptime_end = LinuxParser::UpTime(pid_);
+  last_active_jiffies_ = active_jiffies;
+  last_system_jiffies_ = system_jiffies;
 
-  delta_jiffies = jiffies_end - jiffies_start;
-  delta_time = uptime_end - uptime_start;
-
-  return delta_jiffies / delta_time;
+  return utilization;
 }
 
 // TODO: Return the command that generated this process

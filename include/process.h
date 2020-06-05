@@ -20,6 +20,7 @@ class Process {
   // TODO: Declare any necessary private members
  private:
   int pid_;
+  long last_active_jiffies_{0}, last_system_jiffies_{0};
 };
 
 #endif
