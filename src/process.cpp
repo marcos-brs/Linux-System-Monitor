@@ -26,12 +26,12 @@ float Process::CpuUtilization() {
   long active_duration = active_jiffies - last_active_jiffies_;
   long duration = system_jiffies - last_system_jiffies_;
 
-  long utilization = static_cast<float>(active_duration) / duration;
+  cpu_ = static_cast<float>(active_duration) / duration;
 
   last_active_jiffies_ = active_jiffies;
   last_system_jiffies_ = system_jiffies;
 
-  return utilization;
+  return cpu_;
 }
 
 // TODO: Return the command that generated this process
@@ -48,9 +48,5 @@ long int Process::UpTime() { return LinuxParser::UpTime(pid_); }
 
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process const& a) const {
-  long ram = std::stol(LinuxParser::Ram(pid_));
-  long ram_a = std::stol(LinuxParser::Ram(a.pid_));
-
-  return ram < ram_a;
-}
+bool Process::operator<(Process const& a) const { return cpu_ < a.cpu_; }
+bool Process::operator>(Process const& a) const { return cpu_ > a.cpu_; }
