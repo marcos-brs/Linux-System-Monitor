@@ -20,12 +20,11 @@ int Process::Pid() { return pid_; }
 // TODO: Return this process's CPU utilization
 float Process::CpuUtilization() {
   long active_jiffies = LinuxParser::ActiveJiffies(pid_);
-  float seconds = static_cast<float>(UpTime());
+  float seconds = (float)Process::UpTime();
 
   if (seconds == 0) return 0;
 
-  const float cpuUsage =
-      static_cast<float>((active_jiffies / sysconf(_SC_CLK_TCK)) / seconds);
+  const float cpuUsage = ((active_jiffies / sysconf(_SC_CLK_TCK)) / seconds);
 
   return cpuUsage;
 }

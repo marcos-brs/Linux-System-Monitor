@@ -133,11 +133,11 @@ long LinuxParser::ActiveJiffies() {
        system = std::stol(cpu[CPUStates::kSystem_]),
        irq = std::stol(cpu[CPUStates::kIRQ_]),
        softirq = std::stol(cpu[CPUStates::kSoftIRQ_]),
-       steal = std::stol(cpu[CPUStates::kSteal_]),
-       guest = std::stol(cpu[CPUStates::kGuest_]),
-       guestnice = std::stol(cpu[CPUStates::kGuestNice_]);
+       steal = std::stol(cpu[CPUStates::kSteal_]);
+  // guest = std::stol(cpu[CPUStates::kGuest_]),
+  // guestnice = std::stol(cpu[CPUStates::kGuestNice_]);
 
-  return user + nice + system + irq + softirq + steal + guest + guestnice;
+  return user + nice + system + irq + softirq + steal /* + guest + guestnice*/;
 }
 
 // TODO: Read and return the number of idle jiffies for the system
