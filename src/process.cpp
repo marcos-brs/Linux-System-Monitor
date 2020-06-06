@@ -13,25 +13,21 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-Process::Process(int pid) { pid_ = pid; };
-
+Process::Process(const int pid) : pid_(pid), cpu_(CpuUtilization()) {}
 // TODO: Return this process's ID
 int Process::Pid() { return pid_; }
 
 // TODO: Return this process's CPU utilization
 float Process::CpuUtilization() {
   long active_jiffies = LinuxParser::ActiveJiffies(pid_);
-  long system_jiffies = LinuxParser::Jiffies();
+  float seconds = static_cast<float>(UpTime());
 
-  long active_duration = active_jiffies - last_active_jiffies_;
-  long duration = system_jiffies - last_system_jiffies_;
+  if (seconds == 0) return 0;
 
-  cpu_ = static_cast<float>(active_duration) / duration;
+  const float cpuUsage =
+      static_cast<float>((active_jiffies / sysconf(_SC_CLK_TCK)) / seconds);
 
-  last_active_jiffies_ = active_jiffies;
-  last_system_jiffies_ = system_jiffies;
-
-  return cpu_;
+  return cpuUsage;
 }
 
 // TODO: Return the command that generated this process

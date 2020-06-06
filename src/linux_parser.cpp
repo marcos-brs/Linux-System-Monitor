@@ -264,15 +264,19 @@ string LinuxParser::Uid(int pid) {
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::User(int pid) {
   string line;
-  string search_token = "x:" + to_string(pid);
+  string username, password, uid;
   std::ifstream filestream(kPasswordPath);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
-      auto pos = line.find(search_token);
-      if (pos != string::npos) return line.substr(0, pos - 1);
+      std::replace(line.begin(), line.end(), ':', ' ');
+      std::istringstream linestream(line);
+      linestream >> username >> password >> uid;
+      if (uid == LinuxParser::Uid(pid)) {
+        return username;
+      }
     }
   }
-  return "root";
+  return string();
 }
 
 // TODO: Read and return the uptime of a process
@@ -284,9 +288,14 @@ long LinuxParser::UpTime(int pid) {
   if (filestream.is_open()) {
     std::getline(filestream, line);
     std::istringstream linestream(line);
-    for (int i = 0; i < 13; i++) linestream >> trash;
+    // std::vector<std::string> data{std::istream_iterator<string>{linestream},
+    //                              std::istream_iterator<string>{}};
+    // return LinuxParser::UpTime() - std::stol(data[21]) /
+    // sysconf(_SC_CLK_TCK);
+    for (int i = 0; i < 21; i++) linestream >> trash;
     linestream >> uptime;
-    return uptime;
+    return LinuxParser::UpTime() - uptime / sysconf(_SC_CLK_TCK);
+    // return uptime;
   }
   return 0;
 }
