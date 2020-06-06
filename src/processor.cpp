@@ -4,7 +4,6 @@
 
 #include "linux_parser.h"
 
-// TODO: Return the aggregate CPU utilization
 float Processor::Utilization() {
   const long active_jiffies = LinuxParser::ActiveJiffies();
   const long jiffies = LinuxParser::Jiffies();
