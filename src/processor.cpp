@@ -6,19 +6,19 @@
 
 // TODO: Return the aggregate CPU utilization
 float Processor::Utilization() {
-  const float non_idle = LinuxParser::ActiveJiffies();
-  const float total = LinuxParser::Jiffies();
+  const float active_jiffies = LinuxParser::ActiveJiffies();
+  const float jiffies = LinuxParser::Jiffies();
 
   // If there is no previous information, compute the long-term value for
   // utilization and update previous information.
   if (last_active_jiffies_ == 0 && last_jiffies_ == 0) {
-    last_active_jiffies_ = non_idle;
-    last_jiffies_ = total;
-    return non_idle / total;
+    last_active_jiffies_ = active_jiffies;
+    last_jiffies_ = jiffies;
+    return active_jiffies / jiffies;
   }
 
-  const float total_delta = total - last_jiffies_;
-  const float non_idle_delta = non_idle - last_active_jiffies_;
+  const float active_jiffies_delta = active_jiffies - last_active_jiffies_;
+  const float jiffies_delta = jiffies - last_jiffies_;
 
-  return non_idle_delta / total_delta;
+  return active_jiffies_delta / jiffies_delta;
 }
